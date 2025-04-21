@@ -2,13 +2,12 @@ from flask import Flask, request
 import telegram
 import requests
 import os
-
-# Подгружаем токен из .env
 from dotenv import load_dotenv
-load_dotenv()
+load_dotenv()  # Сначала загружаем .env
 
-TOKEN = os.getenv("TELEGRAM_TOKEN")
+TOKEN = os.getenv("TELEGRAM_TOKEN")  # Потом читаем переменные
 bot = telegram.Bot(token=TOKEN)
+
 
 XRP_AMOUNT = 1407.8907
 BUY_COST = 2999.83598
@@ -45,5 +44,5 @@ def home():
     return 'Бот работает!'
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=10000)
 
