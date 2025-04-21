@@ -18,7 +18,8 @@ def get_xrp_price():
     url = 'https://api.binance.com/api/v3/ticker/price?symbol=XRPUSDT'
     return float(requests.get(url).json()['price'])
 
-@app.route(f"/{TOKEN}", methods=["POST"])
+@app.route("/", methods=["POST"])
+
 def webhook():
     update = telegram.Update.de_json(request.get_json(force=True), bot)
     chat_id = update.message.chat.id
