@@ -15,19 +15,10 @@ BUY_COST = 2999.83598
 app = Flask(__name__)
 
 def get_xrp_price():
-    url = "https://api.binance.com/api/v3/ticker/price?symbol=XRPUSDT"
-    headers = {"User-Agent": "Mozilla/5.0"}  # 👈 добавили заголовок
-    response = requests.get(url, headers=headers)
-
-    try:
-        data = response.json()
-    except Exception as e:
-        raise Exception("Ошибка чтения JSON от Binance: " + str(e))
-
-    if 'price' in data:
-        return float(data['price'])
-    else:
-        raise Exception("В ответе Binance нет 'price': " + str(data))
+    def get_xrp_price():
+    url = 'https://api.coingecko.com/api/v3/simple/price?ids=ripple&vs_currencies=usd'
+    data = requests.get(url).json()
+    return data['ripple']['usd']
 
 @app.route("/", methods=["POST"])
 
