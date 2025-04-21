@@ -15,8 +15,16 @@ BUY_COST = 2999.83598
 app = Flask(__name__)
 
 def get_xrp_price():
-    url = 'https://api.binance.com/api/v3/ticker/price?symbol=XRPUSDT'
-    return float(requests.get(url).json()['price'])
+    url = "https://api.binance.com/api/v3/ticker/price?symbol=XRPUSDT"
+    headers = {"User-Agent": "Mozilla/5.0"}
+    response = requests.get(url, headers=headers)
+    data = response.json()
+
+    # Безопасная проверка
+    if 'price' in data:
+        return float(data['price'])
+    else:
+        raise Exception("Binance API error: 'price' not found in response")
 
 @app.route("/", methods=["POST"])
 
