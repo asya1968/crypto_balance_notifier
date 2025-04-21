@@ -15,7 +15,6 @@ BUY_COST = 2999.83598
 app = Flask(__name__)
 
 def get_xrp_price():
-    def get_xrp_price():
     url = 'https://api.coingecko.com/api/v3/simple/price?ids=ripple&vs_currencies=usd'
     data = requests.get(url).json()
     return data['ripple']['usd']
