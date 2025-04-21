@@ -16,15 +16,18 @@ app = Flask(__name__)
 
 def get_xrp_price():
     url = "https://api.binance.com/api/v3/ticker/price?symbol=XRPUSDT"
-    headers = {"User-Agent": "Mozilla/5.0"}
+    headers = {"User-Agent": "Mozilla/5.0"}  # 👈 добавили заголовок
     response = requests.get(url, headers=headers)
-    data = response.json()
 
-    # Безопасная проверка
+    try:
+        data = response.json()
+    except Exception as e:
+        raise Exception("Ошибка чтения JSON от Binance: " + str(e))
+
     if 'price' in data:
         return float(data['price'])
     else:
-        raise Exception("Binance API error: 'price' not found in response")
+        raise Exception("В ответе Binance нет 'price': " + str(data))
 
 @app.route("/", methods=["POST"])
 
