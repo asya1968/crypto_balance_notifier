@@ -2,12 +2,12 @@ from flask import Flask, request
 import telegram
 import requests
 import os
-from dotenv import load_dotenv
-load_dotenv()  # Сначала загружаем .env
+from dotenv import load_dotenv  # загружаем .env
 
-TOKEN = os.getenv("TELEGRAM_TOKEN")  # Потом читаем переменные
+load_dotenv()
+
+TOKEN = os.getenv("TELEGRAM_TOKEN")  # читаем токен из .env
 bot = telegram.Bot(token=TOKEN)
-
 
 XRP_AMOUNT = 1407.8907
 BUY_COST = 2999.83598
@@ -19,12 +19,13 @@ def get_xrp_price():
     data = requests.get(url).json()
     return data['ripple']['usd']
 
-@app.route(f'/{TOKEN}', methods=["POST"])
+@app.route("/", methods=["POST"])
 def webhook():
     update = telegram.Update.de_json(request.get_json(force=True), bot)
 
+    # Проверка: если сообщение пустое
     if update.message is None:
-        return 'ok'  # ничего не делаем, если нет message
+        return 'ok'
 
     chat_id = update.message.chat.id
 
@@ -35,20 +36,19 @@ def webhook():
         pnl_pct = pnl / BUY_COST * 100
 
         message = (
-            f"📊 Баланс: {XRP_AMOUNT:.4f} XRP\n"
-            f"💸 Цена XRP: {price:.4f} USDT\n"
-            f"🏷️ Стоимость: {current_value:.2f} USDT\n"
+            f"💠 Баланс: {XRP_AMOUNT:.4f} XRP\n"
+            f"💸 Цена XRP: {price:.4f} USD\n"
+            f"💰 Стоимость: {current_value:.2f} USDT\n"
             f"📈 PnL: {pnl:.2f} USDT ({pnl_pct:.2f}%)"
         )
+
         bot.send_message(chat_id=chat_id, text=message)
 
     return 'ok'
-
 
 @app.route('/')
 def home():
     return 'Бот работает!'
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     app.run(host="0.0.0.0", port=10000)
-
