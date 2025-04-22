@@ -17,8 +17,13 @@ app = Flask(__name__)
 
 def get_xrp_price():
     url = "https://api.coingecko.com/api/v3/simple/price?ids=ripple&vs_currencies=usd"
-    data = requests.get(url).json()
-    return data["ripple"]["usd"]
+    try:
+        data = requests.get(url).json()
+        return data["ripple"]["usd"]
+    except Exception as e:
+        print("Ошибка получения цены XRP:", e)
+        return None
+
 
 # маршрут webhook Telegram
 @app.route(f'/{TOKEN}', methods=["POST"])
